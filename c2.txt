@@ -1,0 +1,241 @@
+================================================================================
+CISCO PACKET TRACER COMPLETE STEP-BY-STEP CONFIGURATION GUIDE
+================================================================================
+
+--------------------------------------------------------------------------------
+PART i & ii: TOPOLOGY TRACING & IP ADDRESSING [20 MARKS]
+--------------------------------------------------------------------------------
+Step 1: Deploy Devices in Workspace
+- Open Cisco Packet Tracer.
+- Navigate to Network Devices > Switches. Drag 3 "2960" switches onto the workspace.
+- Rename the switches to S1, S2, and S3 exactly as shown in the diagram.
+- Navigate to End Devices > PC. Drag 9 PCs into the workspace and arrange them around the switches.
+- Label the PCs PC1 through PC9.
+
+Step 2: Connect Devices (Cabling)
+- Select the Connections tool (Lightning bolt icon).
+- Use Copper Straight-Through cables to connect the PCs to their respective switches:
+  * S1: F0/11 -> PC7, F0/18 -> PC8, F0/6 -> PC9
+  * S2: F0/11 -> PC1, F0/18 -> PC2, F0/6 -> PC3
+  * S3: F0/11 -> PC4, F0/18 -> PC5, F0/6 -> PC6
+- Use Copper Cross-Over cables to connect the switches to one another:
+  * S1 F0/1 <----> S2 F0/1
+  * S1 F0/3 <----> S3 F0/3
+
+Step 3: Assign Static IP Addresses on PCs
+- Click on each individual PC -> Go to Desktop Tab -> Open IP Configuration.
+- Select "Static" and enter the corresponding IP Address and Subnet Mask:
+  * PC1: 172.17.10.21 / 255.255.255.0
+  * PC2: 172.17.20.22 / 255.255.255.0
+  * PC3: 172.17.30.23 / 255.255.255.0
+  * PC4: 172.17.10.24 / 255.255.255.0
+  * PC5: 172.17.20.25 / 255.255.255.0
+  * PC6: 172.17.30.26 / 255.255.255.0
+  * PC7: 172.17.10.27 / 255.255.255.0
+  * PC8: 172.17.20.28 / 255.255.255.0
+  * PC9: 172.17.30.29 / 255.255.255.0
+
+--------------------------------------------------------------------------------
+PART iii: DISPLAY DEFAULT VLAN CONFIGURATION [04 MARKS]
+--------------------------------------------------------------------------------
+Step-by-step:
+1. Click on any Switch (e.g., S1) and open the CLI tab.
+2. Press Enter to activate the prompt.
+3. Type the following commands to check the active configuration table:
+
+Switch> enable
+Switch# show vlan brief
+
+--------------------------------------------------------------------------------
+PART iv: DEFAULT VLAN NAMES ASSIGNED TO SWITCHES [03 MARKS]
+--------------------------------------------------------------------------------
+By default, all Cisco switches contain these 5 un-deletable default factory VLANs:
+1. VLAN 1    - Name: default (Every physical port belongs to this initially)
+2. VLAN 1002 - Name: fddi-default
+3. VLAN 1003 - Name: token-ring-default
+4. VLAN 1004 - Name: fddinet-default
+5. VLAN 1005 - Name: trnet-default
+
+--------------------------------------------------------------------------------
+PART v: VERIFY CONNECTIVITY BETWEEN SAME-NETWORK PCs [03 MARKS]
+--------------------------------------------------------------------------------
+Step-by-step:
+1. Click on PC1 (VLAN 10) -> Go to Desktop Tab -> Open Command Prompt.
+2. Type 'ping' followed by the target PC's IP address (e.g., PC7 which is also in VLAN 10):
+
+C:\> ping 172.17.10.27
+
+3. Evaluation: If you receive continuous "Reply from 172.17.10.27..." lines, connectivity is verified.
+
+--------------------------------------------------------------------------------
+PART vi: CONFIGURE THE VLANS AS INDICATED [10 MARKS]
+--------------------------------------------------------------------------------
+Step-by-step:
+You must configure the VLAN database and ports across all three switches.
+
+--- SWITCH S1 CONFIGURATION ---
+S1> enable
+S1# configure terminal
+! Create VLANs
+S1(config)# vlan 10
+S1(config-vlan)# name Faculty
+S1(config-vlan)# vlan 20
+S1(config-vlan)# name Students
+S1(config-vlan)# vlan 30
+S1(config-vlan)# name Guests
+S1(config-vlan)# exit
+! Assign Access Ports
+S1(config)# interface f0/11
+S1(config-if)# switchport mode access
+S1(config-if)# switchport access vlan 10
+S1(config-if)# interface f0/18
+S1(config-if)# switchport mode access
+S1(config-if)# switchport access vlan 20
+S1(config-if)# interface f0/6
+S1(config-if)# switchport mode access
+S1(config-if)# switchport access vlan 30
+S1(config-if)# exit
+! Configure Trunk Lines to carry traffic across switches
+S1(config)# interface range f0/1 , f0/3
+S1(config-if)# switchport mode trunk
+S1(config-if)# exit
+
+--- SWITCH S2 CONFIGURATION ---
+S2> enable
+S2# configure terminal
+S2(config)# vlan 10
+S2(config)# vlan 20
+S2(config)# vlan 30
+S2(config)# exit
+S2(config)# interface f0/11
+S2(config-if)# switchport mode access
+S2(config-if)# switchport access vlan 10
+S2(config-if)# interface f0/18
+S2(config-if)# switchport mode access
+S2(config-if)# switchport access vlan 20
+S2(config-if)# interface f0/6
+S2(config-if)# switchport mode access
+S2(config-if)# switchport access vlan 30
+S2(config-if)# exit
+S2(config)# interface f0/1
+S2(config-if)# switchport mode trunk
+S2(config-if)# exit
+
+--- SWITCH S3 CONFIGURATION ---
+S3> enable
+S3# configure terminal
+S3(config)# vlan 10
+S3(config)# vlan 20
+S3(config)# vlan 30
+S3(config)# exit
+S3(config)# interface f0/11
+S3(config-if)# switchport mode access
+S3(config-if)# switchport access vlan 10
+S3(config-if)# interface f0/18
+S3(config-if)# switchport mode access
+S3(config-if)# switchport access vlan 20
+S3(config-if)# interface f0/6
+S3(config-if)# switchport mode access
+S3(config-if)# switchport access vlan 30
+S3(config-if)# exit
+S3(config)# interface f0/3
+S3(config-if)# switchport mode trunk
+S3(config-if)# exit
+
+--------------------------------------------------------------------------------
+PART vii: CONFIGURE A DHCP SERVER IN VLAN 10 [20 MARKS]
+--------------------------------------------------------------------------------
+Step-by-step:
+We will host the DHCP Server directly on Switch 1 (S1) by initializing an SVI gateway.
+
+S1> enable
+S1# configure terminal
+! 1. Setup default gateway interface for VLAN 10
+S1(config)# interface vlan 10
+S1(config-if)# ip address 172.17.10.1 255.255.255.0
+S1(config-if)# no shutdown
+S1(config-if)# exit
+! 2. Exclude static IP numbers from being distributed to avoid collisions
+S1(config)# ip dhcp excluded-address 172.17.10.1 172.17.10.30
+! 3. Configure the active DHCP Server Pool
+S1(config)# ip dhcp pool VLAN10_AUTOMATION
+S1(dhcp-config)# network 172.17.10.0 255.255.255.0
+S1(dhcp-config)# default-router 172.17.10.1
+S1(dhcp-config)# dns-server 8.8.8.8
+S1(dhcp-config)# exit
+
+- Validation: Go to any PC inside VLAN 10, change its IP configuration from Static to "DHCP", and verify it receives an address automatically.
+
+--------------------------------------------------------------------------------
+PART viii: CONFIGURE AN HTTP WEB SERVER IN VLAN 20 [10 MARKS]
+--------------------------------------------------------------------------------
+Step-by-step:
+1. Drag a "Server" device from End Devices into the workspace area.
+2. Link the Server using a Straight-Through cable to port F0/20 on Switch S1.
+3. Access Switch S1 CLI and map that interface into VLAN 20:
+   S1(config)# interface f0/20
+   S1(config-if)# switchport mode access
+   S1(config-if)# switchport access vlan 20
+   S1(config-if)# exit
+4. Click on the Server -> Desktop Tab -> IP Configuration -> Statically configure its address:
+   IP Address: 172.17.20.100
+   Subnet Mask: 255.255.255.0
+5. Navigate to the Server's Services Tab -> Click HTTP -> Set both HTTP and HTTPS services to ON.
+6. Select the "index.html" file, click Edit, clear everything, and copy-paste the test code below:
+
+<html>
+<head><title>VLAN 20 Server Test</title></head>
+<body style="font-family:sans-serif; text-align:center; margin-top:100px;">
+  <h1 style="color:#1a73e8;">🚀 Web Server Active 🚀</h1>
+  <p>Successfully accessed the local HTTP resource from inside <b>VLAN 20</b>.</p>
+</body>
+</html>
+
+- Validation: Open PC2 (VLAN 20) -> Desktop -> Web Browser -> Type 172.17.20.100 and hit Enter to view your webpage.
+
+--------------------------------------------------------------------------------
+PART ix: CONNECT IP PHONES & INTER-VLAN IP DIALING [20 MARKS]
+--------------------------------------------------------------------------------
+Step-by-step:
+To support voice calling alongside data, we must implement a Voice VLAN and build a telephony service routing system.
+
+1. Remove the direct link line between S1 and PC7.
+2. Drag a "7960 IP Phone" from the devices list into the workspace.
+3. Connect Switch S1 port F0/11 to the IP Phone's "Switch Port".
+4. Connect the IP Phone's "PC Port" to PC7.
+5. Drag the Power Adapter plug icon on the IP Phone's rear interface to turn the device ON.
+6. Configure S1 to treat the line as both data and prioritized voice lanes:
+
+S1> enable
+S1# configure terminal
+S1(config)# vlan 15
+S1(config-vlan)# name Voice_Traffic
+S1(config-vlan)# exit
+S1(config)# interface f0/11
+S1(config-if)# switchport mode access
+S1(config-if)# switchport access vlan 10
+S1(config-if)# switchport voice vlan 15
+S1(config-if)# spanning-tree portfast
+S1(config-if)# exit
+
+7. Connect a core Router to S1 via a Trunk line, and run the Telephony Engine on the Router to assign directory extension numbers:
+
+Router> enable
+Router# configure terminal
+Router(config)# telephony-service
+Router(config-telephony)# max-dn 10
+Router(config-telephony)# max-ephones 10
+Router(config-telephony)# ip source-address 172.17.15.1 port 2000
+Router(config-telephony)# auto assign 1 to 5
+Router(config-telephony)# exit
+
+! Build distinct extension line numbers
+Router(config)# ephone-dn 1
+Router(config-ephone-dn)# number 1001
+Router(config-ephone-dn)# exit
+Router(config)# ephone-dn 2
+Router(config-ephone-dn)# number 1002
+Router(config-ephone-dn)# exit
+
+- Validation: Open the IP Phone GUI tab. Once it registers, you will see extension 1001 assigned to the screen. Dial 1002 to test real-time inter-VLAN calling.
+================================================================================

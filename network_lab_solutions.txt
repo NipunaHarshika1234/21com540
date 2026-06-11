@@ -1,0 +1,144 @@
+CISCO PACKET TRACER LAB - STEP BY STEP GUIDE
+
+PART (a): Network Topology Setup
+-----------------------------------
+1. Drag and drop the following devices onto the Cisco Packet Tracer workspace:
+   - 3x Routers (Router-PT): Name them Router0, Router1, Router2
+   - 3x Switches (Switch-PT): Name them Switch1, Switch2, Switch3
+   - 6x PCs (PC-PT): Name them PC0, PC1, PC2, PC3, PC4, PC5
+
+2. Connect the devices using Copper Straight-Through cables (Black solid line):
+   - PC0 (Fa0/0) to Switch1 (Fa0/1)
+   - PC1 (Fa0/0) to Switch1 (Fa1/1)
+   - PC2 (Fa0/0) to Switch2 (Fa0/1)
+   - PC3 (Fa0/0) to Switch2 (Fa1/1)
+   - PC4 (Fa0/0) to Switch3 (Fa1/1)
+   - PC5 (Fa0/0) to Switch3 (Fa2/1)
+   
+   - Switch1 (Fa0/2) to Router0 (Fa0/0)
+   - Switch2 (Fa0/2) to Router1 (Fa0/0)
+   - Switch3 (Fa0/2) to Router2 (Fa0/0)
+
+3. Connect the routers using Serial DCE/DTE cables (Red lightning bolt with clock icon):
+   - Router0 (Serial2/0) to Router1 (Serial2/0)
+   - Router1 (Serial3/0) to Router2 (Serial2/0)
+
+4. Save the topology as network03_ca.pkt.
+
+
+PART (b): Host (PC) Configuration
+-----------------------------------
+Click on each PC, go to Desktop -> IP Configuration, and enter:
+
+PC0:
+IPv4 Address: 192.168.10.2
+Subnet Mask: 255.255.255.0
+Default Gateway: 192.168.10.1
+
+PC1:
+IPv4 Address: 192.168.10.3
+Subnet Mask: 255.255.255.0
+Default Gateway: 192.168.10.1
+
+PC2:
+IPv4 Address: 192.168.20.2
+Subnet Mask: 255.255.255.0
+Default Gateway: 192.168.20.1
+
+PC3:
+IPv4 Address: 192.168.20.3
+Subnet Mask: 255.255.255.0
+Default Gateway: 192.168.20.1
+
+PC4:
+IPv4 Address: 192.168.30.2
+Subnet Mask: 255.255.255.0
+Default Gateway: 192.168.30.1
+
+PC5:
+IPv4 Address: 192.168.30.3
+Subnet Mask: 255.255.255.0
+Default Gateway: 192.168.30.1
+
+
+PART (c): Router Interface Configuration
+-----------------------------------
+Click each Router, go to the CLI tab, type 'no' for initial config dialog, then:
+
+--- Router0 ---
+enable
+configure terminal
+interface FastEthernet0/0
+ip address 192.168.10.1 255.255.255.0
+no shutdown
+exit
+interface Serial2/0
+ip address 10.0.0.1 255.0.0.0
+no shutdown
+exit
+
+--- Router1 ---
+enable
+configure terminal
+interface FastEthernet0/0
+ip address 192.168.20.1 255.255.255.0
+no shutdown
+exit
+interface Serial2/0
+ip address 10.0.0.2 255.0.0.0
+no shutdown
+exit
+interface Serial3/0
+ip address 11.0.0.1 255.0.0.0
+no shutdown
+exit
+
+--- Router2 ---
+enable
+configure terminal
+interface FastEthernet0/0
+ip address 192.168.30.1 255.255.255.0
+no shutdown
+exit
+interface Serial2/0
+ip address 11.0.0.2 255.0.0.0
+no shutdown
+exit
+
+
+PART (d): RIP Routing (ans.txt content)
+-----------------------------------
+Save the following configuration steps in a file named ans.txt:
+
+ROUTER0:
+enable
+configure terminal
+router rip
+network 192.168.10.0
+network 10.0.0.0
+exit
+
+ROUTER1:
+enable
+configure terminal
+router rip
+network 192.168.20.0
+network 10.0.0.0
+network 11.0.0.0
+exit
+
+ROUTER2:
+enable
+configure terminal
+router rip
+network 192.168.30.0
+network 11.0.0.0
+exit
+
+
+PART (e): Verification
+-----------------------------------
+1. Open PC0 (Desktop -> Command Prompt).
+2. Ping PC5 by typing:
+   ping 192.168.30.3
+3. Verify that you receive replies successfully.

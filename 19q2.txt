@@ -1,0 +1,167 @@
+================================================================================
+CISCO PACKET TRACER ASSIGNMENT ANSWERS - QUESTION 02
+FILE NAME SPECIFICATION: q2answers.txt
+================================================================================
+
+--------------------------------------------------------------------------------
+iii. How to display the default VLAN configuration on the switch?
+--------------------------------------------------------------------------------
+To display the default VLAN configuration, you must access the switch's 
+Command Line Interface (CLI) and enter Privileged EXEC mode to execute the 
+show command.
+
+STEP-BY-STEP ACTIVITY PATH:
+1. Click on the target switch device (e.g., Switch01_IT) in your topology workspace.
+2. Navigate to the "CLI" tab window.
+3. Press "Enter" to activate the command line prompt.
+4. Access Privileged EXEC Mode by typing:
+   Switch> enable
+5. View the filtered, clean summary table of VLANs by typing:
+   Switch# show vlan brief
+6. Press "Spacebar" if needed to scroll through the full configuration output.
+
+
+--------------------------------------------------------------------------------
+iv. Write the default VLAN name assigned to the switch?
+--------------------------------------------------------------------------------
+By default, all factory-fresh Cisco switches assign every physical Ethernet interface 
+to a single out-of-the-box management and broadcast domain.
+
+* Default VLAN ID:   1
+* Default VLAN Name: default
+
+
+--------------------------------------------------------------------------------
+v. How do you verify the connectivity between PCs on the same network?
+--------------------------------------------------------------------------------
+To test and verify end-to-end IP network layer connectivity, you use the 
+Internet Control Message Protocol (ICMP) Echo Request utility via the Command Prompt.
+
+STEP-BY-STEP ACTIVITY PATH:
+1. Click on the source client device (e.g., Host_FCBS_01).
+2. Navigate to the "Desktop" tab at the top toolbar menu.
+3. Click on the "Command Prompt" application icon.
+4. Type the ping command followed by the precise destination IP address of the 
+   target computer (e.g., Host_FCBS_02 at 172.16.58.22):
+   PC> ping 172.16.58.22
+5. Press "Enter" and look for four consecutive success messages:
+   "Reply from 172.16.58.22: bytes=32 time<1ms TTL=128"
+6. A success rate of 4/4 packets received confirms solid link connectivity.
+
+
+--------------------------------------------------------------------------------
+vi. Create and name the following VLANs on the switches.
+--------------------------------------------------------------------------------
+To build the required database segments, you must move into Global Configuration 
+Mode on each Cisco switch and define the explicit numbers and textual identification tags.
+
+STEP-BY-STEP CONFIGURATION COMMAND SEQUENCE:
+Click on the Switch -> CLI Tab -> Press Enter, then execute the following block:
+
+enable
+configure terminal
+vlan 10
+ name IT & Native
+vlan 20
+ name FCBS
+vlan 30
+ name Library
+vlan 40
+ name USM
+vlan 50
+ name Fas
+end
+write memory
+
+
+--------------------------------------------------------------------------------
+vii. Which command only displays the name, status and associated port on the switch?
+--------------------------------------------------------------------------------
+The definitive, specific modifier parameter that strips away extra MTU, SAID, 
+and bridging architecture tables to exclusively report the Name, Status, 
+and assigned structural Switchports is:
+
+Switch# show vlan brief
+
+
+--------------------------------------------------------------------------------
+viii. Assign the VLANs to the active ports on the switches as shown below:
+--------------------------------------------------------------------------------
+To bind network nodes to distinct custom virtual domains, you change the operational 
+mode of a physical interface to an untagged access line and apply the matching VLAN number.
+
+STEP-BY-STEP CONFIGURATION COMMAND SEQUENCE:
+Click on the target Switch -> CLI Tab -> Press Enter, then execute the following block:
+
+enable
+configure terminal
+
+interface FastEthernet 0/11
+ switchport mode access
+ switchport access vlan 10
+exit
+
+interface FastEthernet 0/15
+ switchport mode access
+ switchport access vlan 20
+exit
+
+interface FastEthernet 0/18
+ switchport mode access
+ switchport access vlan 30
+exit
+
+interface FastEthernet 0/21
+ switchport mode access
+ switchport access vlan 40
+exit
+
+interface FastEthernet 0/6
+ switchport mode access
+ switchport access vlan 50
+exit
+
+end
+write memory
+
+
+--------------------------------------------------------------------------------
+ix. How do you configure DNS server? Illustrate with suitable example.
+--------------------------------------------------------------------------------
+A Domain Name System (DNS) server translates friendly alphanumeric web strings 
+into readable numeric IP routing targets.
+
+STEP-BY-STEP CONFIGURATION PATH IN PACKET TRACER:
+1. Click on the designated "DNS_Server_IT" node icon in the network workspace.
+2. Go to the "Desktop" tab and choose "IP Configuration". Set its static settings:
+   - IP Address:  172.16.58.11
+   - Subnet Mask: 255.255.255.0
+3. Close that panel and jump directly to the "Services" tab window.
+4. Choose the "DNS" menu service line listed from the left-hand column menu.
+5. Click the radio selector button next to DNS Service to change it to "ON".
+6. Fill out a new forward lookups resource registration entry under the Add section:
+
+   ILLUSTRATION CONFIGURATION EXAMPLE:
+   * Name:    www.trincocampus.lk
+   * Type:    A Record
+   * Address: 172.16.58.11
+
+7. Click the "+ Add" button to finalize and add it to the active translation table.
+
+VERIFICATION EXAMPLE:
+Go to "Host_IT_01" -> Desktop -> IP Configuration. Set its "DNS Server" entry box 
+to 172.16.58.11. Then open the Desktop "Web Browser" app, type "www.trincocampus.lk" 
+into the address bar, and press Go. The browser will successfully query the DNS IP 
+and resolve the target destination server page.
+
+
+--------------------------------------------------------------------------------
+x. File Save Requirements
+--------------------------------------------------------------------------------
+1. To save your active simulated workspace file layout configuration:
+   - Go to top-left menu header -> Click "File" -> Click "Save As..."
+   - Change the file string name exactly to: tceuslvlan.pkt
+
+2. To save this response guide text documentation file layout block:
+   - Save this script compiled output file structure text exactly as: q2answers.txt
+================================================================================
